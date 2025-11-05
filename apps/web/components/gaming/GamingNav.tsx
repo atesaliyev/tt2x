@@ -59,14 +59,14 @@ export function GamingSecondaryNav() {
   ];
 
   return (
-    <div className="bg-gradient-to-r from-orange-600 via-red-600 to-orange-600 text-white">
+    <div className="bg-zinc-900 border-b border-zinc-800 text-gray-300">
       <div className="max-w-[1400px] mx-auto px-4">
         <div className="flex items-center gap-6 h-10 overflow-x-auto scrollbar-hide">
           {categories.map((category, index) => (
             <Link
               key={index}
               href={`/category/${category.toLowerCase()}`}
-              className="text-sm font-medium whitespace-nowrap hover:text-yellow-300 transition-colors"
+              className="text-sm font-medium whitespace-nowrap hover:text-white hover:scale-[1.01] transition-all duration-150"
             >
               {category}
             </Link>

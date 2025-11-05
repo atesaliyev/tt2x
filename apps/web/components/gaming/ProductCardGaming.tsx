@@ -27,14 +27,14 @@ export function ProductCardGaming({
   
   return (
     <motion.div
-      whileHover={{ scale: 1.02, y: -4 }}
-      transition={{ duration: 0.2 }}
+      whileHover={{ scale: 1.01, y: -2 }}
+      transition={{ duration: 0.15 }}
       className="group relative"
     >
-      {/* Neon border wrapper */}
-      <div className={`p-[2px] rounded-xl bg-gradient-to-br ${accentColors.gradient} hover:shadow-lg hover:shadow-${accent}-500/50 transition-shadow duration-300`}>
+      {/* Subtle corporate border wrapper */}
+      <div className={`p-[1.5px] rounded-xl bg-gradient-to-br ${accentColors.gradientSubtle} transition-all duration-200`}>
         {/* Card content */}
-        <div className="bg-zinc-900 rounded-[inherit] p-4 h-full flex flex-col">
+        <div className="bg-zinc-900 rounded-[inherit] p-4 h-full flex flex-col border border-zinc-800/50">
           {/* Badge */}
           {badge && (
             <div className="absolute top-2 right-2 bg-red-500 text-white text-xs px-2 py-1 rounded-md font-bold">

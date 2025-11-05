@@ -1,11 +1,16 @@
 'use client';
 
 import { GamingNav, GamingSecondaryNav } from '@/components/gaming/GamingNav';
+import { CorporateBar } from '@/components/gaming/CorporateBar';
+import { TrustRow } from '@/components/gaming/TrustRow';
 import { GamingHero } from '@/components/gaming/GamingHero';
 import { GameTabs } from '@/components/gaming/GameTabs';
 import { ProductCardGaming } from '@/components/gaming/ProductCardGaming';
 import { SocialMediaCard } from '@/components/gaming/SocialMediaCard';
 import { UCCard } from '@/components/gaming/UCCard';
+import { WhyUsCorporate } from '@/components/gaming/WhyUsCorporate';
+import { FAQSection } from '@/components/gaming/FAQSection';
+import { CorporateFooter } from '@/components/gaming/CorporateFooter';
 import { 
   SiTiktok, 
   SiInstagram, 
@@ -68,12 +73,18 @@ export default function GamingPage() {
 
   return (
     <div className="min-h-screen bg-zinc-950">
+      {/* Corporate Bar */}
+      <CorporateBar />
+      
       {/* Navigation */}
       <GamingNav />
       <GamingSecondaryNav />
       
       {/* Hero Banner */}
       <GamingHero />
+      
+      {/* Trust Row */}
+      <TrustRow />
       
       {/* Game Tabs */}
       <GameTabs />
@@ -151,49 +162,14 @@ export default function GamingPage() {
         </div>
       </div>
 
-      {/* Footer */}
-      <footer className="bg-zinc-950 border-t border-zinc-800 py-12">
-        <div className="max-w-[1400px] mx-auto px-4">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-8">
-            <div>
-              <h3 className="text-white font-bold mb-4">HAKKIMIZDA</h3>
-              <ul className="space-y-2 text-gray-400 text-sm">
-                <li><a href="#" className="hover:text-white">Biz Kimiz?</a></li>
-                <li><a href="#" className="hover:text-white">İletişim</a></li>
-                <li><a href="#" className="hover:text-white">Kariyer</a></li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="text-white font-bold mb-4">POPÜLER LİNKLER</h3>
-              <ul className="space-y-2 text-gray-400 text-sm">
-                <li><a href="#" className="hover:text-white">PUBG Mobile UC</a></li>
-                <li><a href="#" className="hover:text-white">Valorant VP</a></li>
-                <li><a href="#" className="hover:text-white">Instagram Takipçi</a></li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="text-white font-bold mb-4">YARDIM</h3>
-              <ul className="space-y-2 text-gray-400 text-sm">
-                <li><a href="#" className="hover:text-white">SSS</a></li>
-                <li><a href="#" className="hover:text-white">Nasıl Sipariş Verilir?</a></li>
-                <li><a href="#" className="hover:text-white">Güvenli Ödeme</a></li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="text-white font-bold mb-4">YASAL</h3>
-              <ul className="space-y-2 text-gray-400 text-sm">
-                <li><a href="#" className="hover:text-white">Kullanım Koşulları</a></li>
-                <li><a href="#" className="hover:text-white">Gizlilik Politikası</a></li>
-                <li><a href="#" className="hover:text-white">İade Politikası</a></li>
-              </ul>
-            </div>
-          </div>
-          
-          <div className="border-t border-zinc-800 pt-8 text-center text-gray-400 text-sm">
-            <p>© 2024 Hesap UC PIN. Tüm hakları saklıdır.</p>
-          </div>
-        </div>
-      </footer>
+      {/* Why Us Corporate Section */}
+      <WhyUsCorporate />
+
+      {/* FAQ Section */}
+      <FAQSection />
+
+      {/* Corporate Footer */}
+      <CorporateFooter />
     </div>
   );
 }
