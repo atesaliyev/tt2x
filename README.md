@@ -44,7 +44,7 @@ A complete, production-ready e-commerce platform for selling digital gift cards 
 - **Authentication**: JWT, bcrypt, speakeasy (2FA)
 - **Payments**: Stripe, DummyPay (dev)
 - **Email**: Nodemailer
-- **Deployment**: Docker, Docker Compose
+- **Deployment**: Standard Node.js deployment
 
 ## Project Structure
 
@@ -127,15 +127,38 @@ CODE_ENC_KEY="your-32-byte-encryption-key-here"
 
 1. **Clone the repository**
    ```bash
-   git clone <repository-url>
-   cd epinya
+   git clone https://github.com/atesaliyev/tt2x.git
+   cd tt2x
+   git checkout devin/1762316070-epinya-platform
    ```
 
-2. **Install dependencies**
+2. **Install MySQL 8+**
+   
+   **On macOS:**
    ```bash
-   # Install root dependencies
-   npm install
+   brew install mysql
+   brew services start mysql
+   mysql -u root -p
+   CREATE DATABASE epinya;
+   ```
+   
+   **On Ubuntu/Debian:**
+   ```bash
+   sudo apt update
+   sudo apt install mysql-server
+   sudo systemctl start mysql
+   sudo mysql
+   CREATE DATABASE epinya;
+   ```
+   
+   **On Windows:**
+   - Download MySQL 8+ from https://dev.mysql.com/downloads/mysql/
+   - Install and start MySQL service
+   - Open MySQL Workbench or command line
+   - Create database: `CREATE DATABASE epinya;`
 
+3. **Install dependencies**
+   ```bash
    # Install web app dependencies
    cd apps/web
    npm install
@@ -145,7 +168,7 @@ CODE_ENC_KEY="your-32-byte-encryption-key-here"
    npm install
    ```
 
-3. **Setup database**
+4. **Setup database**
    ```bash
    cd packages/db
    
@@ -159,13 +182,13 @@ CODE_ENC_KEY="your-32-byte-encryption-key-here"
    npm run seed
    ```
 
-4. **Start development server**
+5. **Start development server**
    ```bash
    cd ../../apps/web
    npm run dev
    ```
 
-5. **Access the application**
+6. **Access the application**
    - Frontend: http://localhost:3000
    - Admin Panel: http://localhost:3000/admin
    - Health Check: http://localhost:3000/api/health
@@ -181,39 +204,6 @@ After seeding, you can login with:
 **User Account:**
 - Email: `user@epinya.test`
 - Password: `User123!`
-
-## Docker Deployment
-
-### Using Docker Compose
-
-1. **Build and start services**
-   ```bash
-   docker-compose up -d
-   ```
-
-2. **Run migrations**
-   ```bash
-   docker-compose exec web sh -c "cd packages/db && npx prisma migrate deploy"
-   ```
-
-3. **Seed database**
-   ```bash
-   docker-compose exec web sh -c "cd packages/db && npm run seed"
-   ```
-
-4. **Access the application**
-   - http://localhost:3000
-
-### Manual Docker Build
-
-```bash
-docker build -t epinya .
-docker run -p 3000:3000 \
-  -e DATABASE_URL="mysql://root:password@host.docker.internal:3306/epinya" \
-  -e JWT_SECRET="your-secret" \
-  -e CODE_ENC_KEY="your-32-byte-key" \
-  epinya
-```
 
 ## API Documentation
 
