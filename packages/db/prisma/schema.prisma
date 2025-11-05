@@ -1,0 +1,198 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  USER
+  ADMIN
+}
+
+enum Currency {
+  TRY
+  USD
+  EUR
+}
+
+enum CodeStatus {
+  AVAILABLE
+  RESERVED
+  SOLD
+  REVOKED
+}
+
+enum OrderStatus {
+  PENDING
+  PAID
+  FAILED
+  REFUNDED
+  CHARGEBACK
+}
+
+enum DeliveryChannel {
+  SCREEN
+  EMAIL
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  role         UserRole @default(USER)
+  totpSecret   String?
+  totpEnabled  Boolean  @default(false)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  orders    Order[]
+  auditLogs AuditLog[]
+
+  @@index([email])
+}
+
+model Product {
+  id          String   @id @default(cuid())
+  title       String
+  slug        String   @unique
+  category    String
+  brand       String
+  region      String
+  description String   @db.Text
+  imageUrl    String?
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  priceTiers PriceTier[]
+  codes      Code[]
+  orderItems OrderItem[]
+
+  @@index([slug])
+  @@index([category])
+  @@index([brand])
+  @@index([active])
+}
+
+model PriceTier {
+  id         String   @id @default(cuid())
+  productId  String
+  currency   Currency
+  faceValue  Decimal  @db.Decimal(10, 2)
+  salePrice  Decimal  @db.Decimal(10, 2)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([productId])
+  @@index([currency])
+}
+
+model Code {
+  id            String     @id @default(cuid())
+  productId     String
+  encryptedCode Bytes
+  maskPreview   String
+  status        CodeStatus @default(AVAILABLE)
+  batchId       String?
+  createdAt     DateTime   @default(now())
+  soldAt        DateTime?
+
+  product      Product          @relation(fields: [productId], references: [id], onDelete: Cascade)
+  fulfillments Fulfillment[]
+  reservation  CodeReservation?
+
+  @@index([productId, status])
+  @@index([status])
+  @@index([batchId])
+}
+
+model Order {
+  id              String      @id @default(cuid())
+  userId          String?
+  total           Decimal     @db.Decimal(10, 2)
+  currency        Currency
+  status          OrderStatus @default(PENDING)
+  paymentProvider String
+  paymentRef      String?
+  ip              String?
+  userAgent       String?     @db.Text
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+
+  user         User?             @relation(fields: [userId], references: [id], onDelete: SetNull)
+  items        OrderItem[]
+  fulfillments Fulfillment[]
+  reservations CodeReservation[]
+
+  @@index([userId])
+  @@index([status])
+  @@index([paymentRef])
+  @@index([createdAt])
+}
+
+model OrderItem {
+  id        String   @id @default(cuid())
+  orderId   String
+  productId String
+  faceValue Decimal  @db.Decimal(10, 2)
+  unitPrice Decimal  @db.Decimal(10, 2)
+  qty       Int
+  createdAt DateTime @default(now())
+
+  order   Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id], onDelete: Restrict)
+
+  @@index([orderId])
+  @@index([productId])
+}
+
+model Fulfillment {
+  id              String          @id @default(cuid())
+  orderId         String
+  codeId          String
+  deliveredAt     DateTime        @default(now())
+  deliveryChannel DeliveryChannel @default(SCREEN)
+
+  order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  code  Code  @relation(fields: [codeId], references: [id], onDelete: Restrict)
+
+  @@index([orderId])
+  @@index([codeId])
+}
+
+model CodeReservation {
+  id        String   @id @default(cuid())
+  codeId    String   @unique
+  orderId   String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  code  Code  @relation(fields: [codeId], references: [id], onDelete: Cascade)
+  order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@index([orderId])
+  @@index([expiresAt])
+}
+
+model AuditLog {
+  id          String   @id @default(cuid())
+  actorUserId String?
+  type        String
+  resource    String
+  payload     String   @db.Text
+  ip          String?
+  createdAt   DateTime @default(now())
+
+  actor User? @relation(fields: [actorUserId], references: [id], onDelete: SetNull)
+
+  @@index([actorUserId])
+  @@index([type])
+  @@index([resource])
+  @@index([createdAt])
+}
